@@ -4,6 +4,6 @@
 
 #Student ID: 20204966
 
-#Student Name:Tran Huu Hien
+#Student Name:Trần Hữu Hiến
 
 #Source File: tranhuuhien_20204966_ThuctapCSDL.sql 
