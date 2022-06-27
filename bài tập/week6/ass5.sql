@@ -1,42 +1,120 @@
+-- Database: adventureworks
 
-use AdventureWorks2017
+-- DROP DATABASE IF EXISTS adventureworks;
 
--- # Task 1
+CREATE DATABASE adventureworks
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'Vietnamese_Vietnam.1258'
+    LC_CTYPE = 'Vietnamese_Vietnam.1258'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1;
+	
+CREATE TABLE Custom(
+	ID INT PRIMARY KEY,
+	Name VARCHAR(30) NOT NULL,
+	ADDRESS_City VARCHAR(50) NOT NULL,
+	StateProvince VARCHAR(50) NOT NULL
+	)
+--DROP TABLE Custom;
+CREATE TABLE Products(
+	PRODUCT_NUMBER VARCHAR(30) PRIMARY KEY NOT NULL,
+	NAME_P VARCHAR(30) NOT NULL,
+	COLOR_P VARCHAR(10) NOT NULL,
+	SIZE_P CHAR(3) NOT NULL,
+	PRICE_P MONEY NOT NULL,
+	WEIGHT_P SMALLINT NOT NULL
+)
+--DROP TABLE Products;
+INSERT INTO Custom (ID, Name, ADDRESS_City, StateProvince)
+VALUES ('01','Vu Tien Dung', 'Ha Noi', 'Truong Dinh');
+INSERT INTO Custom (ID, Name, ADDRESS_City, StateProvince)
+VALUES ('02','Le Huy Hoang', 'Nam Dinh' ,'Y Yen');
+INSERT INTO Custom (ID, Name, ADDRESS_City, StateProvince)
+VALUES ('03','Hoang Nhat Hung', 'Ha Noi', 'Hoang Mai');
+INSERT INTO Custom (ID, Name, ADDRESS_City, StateProvince)
+VALUES ('04','Tran Vu Truong Giang', 'Ninh Binh', 'Yen Loc');
+SELECT * FROM Custom;
 
- Retrieve customer name data
-SELECT Title, FirstName, MiddleName, LastName, Suffix FROM Person.Person;
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P, WEIGHT_P)
+VALUES ('BK-51565','DELL V', 'Black', 'M', '16000000', '4');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P, WEIGHT_P)
+VALUES ('BK-83478r','Thinkpad', 'White', 'L', '20000000', '3');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P, WEIGHT_P)
+VALUES ('AK-93825r','ACCER X', 'Red', 'S', '24000000', '5');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-786482','MAC XS', 'Blue', 'XL', '30000000', '5');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-356482','LENOVO 10', 'White', 'XL', '30000000', '2');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-7832952','MAC CLC', 'RED', 'M', '30000000', '3');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-78648947','DELL IMPRI', 'Black', 'S', '20000000', '7');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-72534582','ASUS 10', 'RED', 'XL', '10000000', '8');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-76534682','MAC XL', 'Black', 'XL', '11000000', '8');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-3253482','MAC XU', 'Green', 'XL', '15000000', '6');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-532482','DELL XA', 'Violet', 'XL', '12000000', '5');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-2352482','ASSUS11', 'Pink', 'XL', '18000000', '7');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-7465382','LENOVO QK', 'Orange', 'XL', '16000000', '4');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-7893755','NOKIA', 'Black', 'M', '26000000', '3');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-345482','IP 13 PR mAX', 'Green', 'XL', '30000000', '10');
+INSERT INTO Products (PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P)
+VALUES ('BK-7863462','Sam Sung', 'Blue', 'XL', '30000000', '4');
+SELECT * FROM Products;
 
- Retrieve customer names and phone numbers
-select concat('Mr. ', c.FirstName) as CustomerName, c.PhoneNumber as PhoneNumber, a.* from Sales.SalesPerson as a inner join 
-(select b.FirstName as FirstName, d.PhoneNumber as PhoneNumber, b.BusinessEntityID as BusinessEntityID from Person.Person as b inner join Person.PersonPhone as d on b.BusinessEntityID = d.BusinessEntityID) as c 
-on a.BusinessEntityID = c.BusinessEntityID 
+--Truy van
+--Task 1:
+--1. Truy van thong tin ten cac thanh pho, tinh sap xep theo thu tu tang dan ten thanh pho
 
+SELECT ADDRESS_City, StateProvince AS SalesLT_Address
+FROM Custom
+ORDER BY ADDRESS_City ASC;
 
--- # Task 2
- Retrieve customer order data
-use AdventureWorksLT2019
-SELECT CAST(CustomerID AS varchar) + ': ' + CompanyName AS CustomerCompany
-FROM SalesLT.Customer;
+--2 Truy xuat du lieu san pham  lay top 10 san pham nang nhat
+SELECT PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P FROM (
+	SELECT PRODUCT_NUMBER, NAME_P, COLOR_P, SIZE_P, PRICE_P,WEIGHT_P 
+	FROM Products
+	ORDER BY WEIGHT_P DESC
+)AS SORT_WEIGHT
+LIMIT 10* (SELECT COUNT(PRODUCT_NUMBER) FROM Products) / 100;
 
- Retrieve a list of sales order revisions
-SELECT SalesOrderNumber + ' (' + STR(RevisionNumber, 1) + ')' AS OrderRevision,
-CONVERT(nvarchar(30), OrderDate, 102) AS OrderDate
-FROM SalesLT.SalesOrderHeader;
+--TASK 2:
+--1. Lay thong tin chi tiet ve san pham theo ma ID cho trc
+SELECT NAME_P, COLOR_P, SIZE_P FROM Products
+WHERE PRODUCT_NUMBER LIKE '%BK-7863462%'; 
 
--- # Task 3
- Retrieve customer contact details
-SELECT FirstName + ' ' + ISNULL(MiddleName + ' ', '')+ LastName AS CustomerName
-FROM SalesLT.Customer;
+--2. Loc san pham theo mau sac va kich thuoc
+SELECT PRODUCT_NUMBER, NAME_P FROM Products
+WHERE (COLOR_P ='Black' OR COLOR_P = 'Red' OR COLOR_P = 'White') AND (SIZE_P = 'S' OR SIZE_P ='M');
 
- Retrieve primary contact details
-SELECT CustomerID, COALESCE(EmailAddress, Phone) AS PrimaryContact
-FROM SalesLT.Customer;
+--3. LOc san pham theo so san pham 
+SELECT PRODUCT_NUMBER, NAME_P, PRICE_P FROM Products
+WHERE PRODUCT_NUMBER LIKE 'BK%';
 
- Retrieve shipping status
-SELECT SalesOrderID, OrderDate,
-    CASE
-      WHEN ShipDate IS NULL THEN 'Awaiting Shipment'
-      ELSE 'Shipped'
-    END AS ShippingStatus
-FROM SalesLT.SalesOrderHeader;
-go
+--4. Truy xuat cac san pham cu the theo so san pham
+SELECT PRODUCT_NUMBER, NAME_P, PRICE_P FROM Products
+WHERE  PRODUCT_NUMBER LIKE 'BK%' AND PRODUCT_NUMBER NOT LIKE '%r%' 
+AND(PRODUCT_NUMBER LIKE '%01'
+	OR PRODUCT_NUMBER LIKE '%02'
+   	OR PRODUCT_NUMBER LIKE '%03'
+	OR PRODUCT_NUMBER LIKE '%04'
+	OR PRODUCT_NUMBER LIKE '%05'
+	OR PRODUCT_NUMBER LIKE '%06'
+	OR PRODUCT_NUMBER LIKE '%07'
+	OR PRODUCT_NUMBER LIKE '%08'
+	OR PRODUCT_NUMBER LIKE '%09'
+	OR PRODUCT_NUMBER LIKE '%10'
+	OR PRODUCT_NUMBER LIKE '%5_'
+   
+   
+   )
+
